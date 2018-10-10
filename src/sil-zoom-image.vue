@@ -93,10 +93,10 @@ export default {
 	background-repeat: no-repeat, no-repeat;
 	background-position: center left, center right;
 }
-.zoom-image:hover .zoom:before {
+.zoom-image:hover:before {
 	opacity: 1;
 }
-.zoom-image:hover .zoom:after {
+.zoom-image:hover:after {
 	transform: translate(-50%, -50%) rotate(45deg);
 }
 
@@ -105,8 +105,8 @@ export default {
 	background-position: var(--x) var(--y);
 	box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.25);
 }
-.zoom-image.active :before,
-.zoom-image.active :after {
+.zoom-image.active:before,
+.zoom-image.active:after {
 	opacity: 0;
 }
 </style>
