@@ -1,5 +1,17 @@
 <template>
-	<div class="zoom-image" :class="{'active' : active}" ref="image" :style="{ backgroundImage: `url('${src}')`, backgroundSize: size }" @click="active = !active" @mouseout="active = false" @mousemove="moveImage" @touchmove="movedTouch"></div>
+	<div
+		ref="image"
+		:class="{'active' : isActive}"
+		:style="{ backgroundImage: `url('${src}')`, backgroundSize: size }"
+		class="zoom-image"
+		@click="isActive = !isActive"
+		@mouseout="isActive = false"
+		@mousemove="moveImage"
+		@touchmove="movedTouch"
+	>
+		<div v-if="showOverlay" class="zoom-image__overlay"></div>
+		<div v-if="showIcon" class="zoom-image__icon"></div>
+	</div>
 </template>
 
 <script>
@@ -12,11 +24,19 @@ export default {
 		size: {
 			type: String,
 			default: 'cover'
+		},
+		showOverlay: {
+			type: Boolean,
+			default: false
+		},
+		showIcon: {
+			type: Boolean,
+			default: false
 		}
 	},
 	data() {
 		return {
-			active: false,
+			isActive: false,
 			moved: {
 				x: 0,
 				y: 0
@@ -46,14 +66,14 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .zoom-image {
 	--x: 0px;
 	--y: 0px;
 	width: 100%;
+	min-height: 100%;
 	height: 0;
-	padding-bottom: 56%;
-	border: 2px solid white;
+	/* border: 2px solid white; */
 	box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0);
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -61,9 +81,10 @@ export default {
 	overflow: hidden;
 	transition: box-shadow 0.3s ease-in-out, background-size 0.3s ease-in-out;
 	background-color: white;
+	z-index: 1000;
+	mix-blend-mode: multiply;
 }
-.zoom-image:before {
-	content: '';
+.zoom-image__overlay {
 	display: block;
 	width: 100%;
 	height: 100%;
@@ -72,8 +93,7 @@ export default {
 	opacity: 0;
 	transition: opacity 0.3s ease-in-out;
 }
-.zoom-image:after {
-	content: '';
+.zoom-image__icon {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -81,32 +101,26 @@ export default {
 	height: 2rem;
 	transform: translate(-50%, 100vw) rotate(0deg);
 	color: white;
-	transition: transform 0.3s ease-in-out;
-	background-image: radial-gradient(
-			transparent 50%,
-			white 50%,
-			white calc(50% + 3px),
-			transparent calc(50% + 3px)
-		),
+	transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+	background-image: radial-gradient(transparent 50%, white 50%, white calc(50% + 3px), transparent calc(50% + 3px)),
 		linear-gradient(to bottom, white, white);
 	background-size: 2rem 2rem, 1rem 3px;
 	background-repeat: no-repeat, no-repeat;
 	background-position: center left, center right;
 }
-.zoom-image:hover:before {
+.zoom-image:hover .zoom-image__overlay {
 	opacity: 1;
 }
-.zoom-image:hover:after {
+.zoom-image:hover .zoom-image__icon {
 	transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .zoom-image.active {
 	background-size: auto !important;
 	background-position: var(--x) var(--y);
-	box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.25);
 }
-.zoom-image.active:before,
-.zoom-image.active:after {
+.zoom-image.active .zoom-image__overlay,
+.zoom-image.active .zoom-image__icon {
 	opacity: 0;
 }
 </style>
