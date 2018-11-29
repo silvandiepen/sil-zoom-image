@@ -1,6 +1,8 @@
 # Zoom Image
 
-Zoom image is a simple vue plugin to be able to click and navigate through a zoomed (100% original) image. 
+Click and move, thats what you can do with these images. Sometimes you don't want to create full big things to show zooms.
+This simple (Vue) component just makes it possible to all you need, see a normal view and a zoomed view.
+No other options, it's not necessary. Keep it simple!
 
 ### Install
 
