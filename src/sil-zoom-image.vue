@@ -6,11 +6,16 @@
 		class="zoom-image"
 		@click="isActive = !isActive"
 		@mouseout="isActive = false"
-		@mousemove="moveImage"
-		@touchmove="movedTouch"
+		@mousemove="moveMouse"
 	>
-		<div v-if="showOverlay" class="zoom-image__overlay"></div>
-		<div v-if="showIcon" class="zoom-image__icon"></div>
+		<div
+			v-if="showOverlay"
+			class="zoom-image__overlay"
+		></div>
+		<div
+			v-if="showIcon"
+			class="zoom-image__icon"
+		></div>
 	</div>
 </template>
 
@@ -32,6 +37,10 @@ export default {
 		showIcon: {
 			type: Boolean,
 			default: false
+		},
+		cursor: {
+			type: Array,
+			default: () => []
 		}
 	},
 	data() {
@@ -43,24 +52,40 @@ export default {
 			}
 		};
 	},
+	watch: {
+		isActive: function() {
+			this.setCursor();
+		}
+	},
+	mounted() {
+		this.setCursor();
+	},
 	methods: {
-		moveImage(e) {
-			let size = this.$refs.image.getBoundingClientRect();
-			let position = {
-				x: (e.offsetX / size.width) * 100,
-				y: (e.offsetY / size.height) * 100
-			};
-			this.moved.x = e.offsetX;
-			this.moved.y = e.offsetY;
-
-			this.$refs.image.style.setProperty('--x', position.x + '%');
-			this.$refs.image.style.setProperty('--y', position.y + '%');
+		setCursor() {
+			console.log(this.$props.cursor);
+			if (this.$props.cursor.length == 2) {
+				if (this.isActive) {
+					this.$refs.image.style.setProperty('--zoom-image-cursor-inactive', `url('${this.$props.cursor[1]}'`);
+				} else {
+					this.$refs.image.style.setProperty('--zoom-image-cursor-active', `url('${this.$props.cursor[0]}'`);
+				}
+			} else if (this.$props.cursor.length == 1) {
+				this.$refs.image.style.setProperty('--zoom-image-cursor-active', `url('${this.$props.cursor[0]}'`);
+			}
 		},
-		movedTouch(e) {
-			this.moved = {
-				x: e.offsetX,
-				y: e.offsetY
-			};
+		moveMouse(e) {
+			if (this.isActive) {
+				let size = this.$refs.image.getBoundingClientRect();
+				let position = {
+					x: (e.offsetX / size.width) * 100,
+					y: (e.offsetY / size.height) * 100
+				};
+				this.moved.x = e.offsetX;
+				this.moved.y = e.offsetY;
+
+				this.$refs.image.style.setProperty('--x', position.x + '%');
+				this.$refs.image.style.setProperty('--y', position.y + '%');
+			}
 		}
 	}
 };
@@ -107,6 +132,7 @@ export default {
 	background-size: 2rem 2rem, 1rem 3px;
 	background-repeat: no-repeat, no-repeat;
 	background-position: center left, center right;
+	cursor: var(--zoom-image-cursor-inactive), auto;
 }
 .zoom-image:hover .zoom-image__overlay {
 	opacity: 1;
@@ -118,6 +144,7 @@ export default {
 .zoom-image.active {
 	background-size: auto !important;
 	background-position: var(--x) var(--y);
+	cursor: var(--zoom-image-cursor-active), auto;
 }
 .zoom-image.active .zoom-image__overlay,
 .zoom-image.active .zoom-image__icon {
