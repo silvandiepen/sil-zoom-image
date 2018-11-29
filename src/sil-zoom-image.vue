@@ -62,6 +62,7 @@ export default {
 	},
 	methods: {
 		setCursor() {
+			if(!process.browser) return; 
 			if (this.$props.cursor.length == 2) {
 				if (this.isActive) {
 					this.$refs.image.style.setProperty('--zoom-image-cursor-inactive', `url('${this.$props.cursor[1]})'`);
@@ -71,8 +72,10 @@ export default {
 			} else if (this.$props.cursor.length == 1) {
 				this.$refs.image.style.setProperty('--zoom-image-cursor-active', `url('${this.$props.cursor[0]})'`);
 			}
+			
 		},
 		moveMouse(e) {
+			if(!process.browser) return; 
 			if (this.isActive) {
 				let size = this.$refs.image.getBoundingClientRect();
 				let position = {
