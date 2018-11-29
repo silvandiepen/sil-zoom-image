@@ -62,7 +62,6 @@ export default {
 	},
 	methods: {
 		setCursor() {
-			console.log(this.$props.cursor);
 			if (this.$props.cursor.length == 2) {
 				if (this.isActive) {
 					this.$refs.image.style.setProperty('--zoom-image-cursor-inactive', `url('${this.$props.cursor[1]}'`);
@@ -98,14 +97,12 @@ export default {
 	width: 100%;
 	min-height: 100%;
 	height: 0;
-	/* border: 2px solid white; */
 	box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0);
 	background-position: center center;
 	background-repeat: no-repeat;
 	position: relative;
 	overflow: hidden;
-	transition: box-shadow 0.3s ease-in-out, background-size 0.3s ease-in-out;
-	background-color: white;
+	transition: background-size 0.3s ease-in-out;
 	z-index: 1000;
 	mix-blend-mode: multiply;
 }
